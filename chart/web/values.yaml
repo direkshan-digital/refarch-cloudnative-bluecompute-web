@@ -4,18 +4,18 @@
 replicaCount: 1
 image:
   #repository: registry.csplab.cloudns.cx/microprofile/bc-web-mp
-  repository: ibmcase/bc-web-mp
   #repository: bc-web-mp
-  tag: v2.0.0
-  pullPolicy: Always
+  repository: ibmcase/bc-web-mp
+  pullPolicy: IfNotPresent
 service:
   name: bluecompute-web
   type: NodePort
-  externalPort: 80
+  servicePort: 80
   internalPort: 8000
   nodeport:
     port:
 ingress:
+  enabled: false
   hostname:
   path: /bluecompute-mp
 resources:
@@ -44,6 +44,14 @@ services:
     host:
     port:
 
+versions:
+  - name: web
+    image:
+      tag: latest
+  - name: web-canary
+    image:
+      tag: canary
+
 global:
   bluemix:
     apiKey:
@@ -54,3 +62,9 @@ global:
       space:
 
     clusterName:
+
+istio:
+  enabled: false
+  gateway:
+    enabled: false
+  mTLS: ISTIO_MUTUAL

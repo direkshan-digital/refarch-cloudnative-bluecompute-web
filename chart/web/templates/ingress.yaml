@@ -1,4 +1,5 @@
-apiVersion: extensions/v1beta1
+{{ if .Values.ingress.enabled }} 
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   annotations:
@@ -6,13 +7,7 @@ metadata:
     ingress.bluemix.net/rewrite-path: "serviceName={{ .Release.Name }}-{{ .Chart.Name }} rewrite=/"
   name: {{ .Release.Name }}-{{ .Chart.Name }}
   labels:
-    app: bluecompute
-    micro: web-bff
-    tier: frontend
-    implementation: microprofile
-    heritage: {{.Release.Service | quote }}
-    release: {{ .Release.Name }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    {{- include "web.labels" . | indent 4 }}
 spec:
   rules:
   - http:
@@ -24,3 +19,4 @@ spec:
 {{- if .Values.ingress.hostname }}
     host: {{ .Values.ingress.hostname | quote }}
 {{- end -}}
+{{ end }}
